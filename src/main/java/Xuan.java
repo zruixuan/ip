@@ -12,7 +12,7 @@ public class Xuan {
         System.out.println(banner);
 
         //initialize the fixed size array
-        String[] tasks = new String[100];
+        Task[] tasks = new Task[100];
         int taskCount = 0;
 
         //greeting message
@@ -35,9 +35,25 @@ public class Xuan {
                 for (int i = 0; i < taskCount; i++) {
                     System.out.println("      " + (i + 1) + ". " + tasks[i]);
                 }
+            } else if (input.startsWith("mark ")) {
+                //get the index to mark
+                int taskNumber = Integer.parseInt(input.substring(5));
+                tasks[taskNumber - 1].markAsDone();
+
+                //mark as done
+                System.out.println("Xuan: Nice! I've marked this task as done:");
+                System.out.println("      " + tasks[taskNumber - 1]);
+            } else if (input.startsWith("unmark ")) {
+                //get the index to mark
+                int taskNumber = Integer.parseInt(input.substring(7));
+                tasks[taskNumber - 1].markAsNotDone();
+
+                //mark as not done
+                System.out.println("Xuan: OK, I've marked this task as not done yet:");
+                System.out.println("      " + tasks[taskNumber - 1]);
             } else {
                 //store tasks
-                tasks[taskCount] = input;
+                tasks[taskCount] = new Task(input);
                 taskCount++;
 
                 //repeat users
