@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 public class Xuan {
     public static void main(String[] args) {
         //my banner
@@ -10,10 +12,26 @@ public class Xuan {
         System.out.println(banner);
 
         //greeting message
-        System.out.println("Hello! I'm Xuan.");
-        System.out.println("What can I do for you? \n");
+        System.out.println("Xuan: Hello! I'm Xuan.");
+        System.out.println("Xuan: What can I do for you? \n");
 
-        //exiting message
-        System.out.println("Bye. Hope to see you again soon!");
+        //get the content users type in
+        Scanner scanner = new Scanner(System.in);
+
+        while (true) {
+            System.out.print("You: ");
+            String input = scanner.nextLine();
+
+            //exiting message
+            if (input.equals("bye")) {
+                System.out.println("Xuan: Bye. Hope to see you again soon!");
+                break;
+            }
+
+            //repeat users
+            System.out.println("Xuan: " + input);
+        }
+
+        scanner.close();
     }
 }
