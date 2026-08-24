@@ -13,10 +13,18 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * Handles saving tasks to and loading tasks from a data file.
+ */
 public class Storage {
 
     private String filePath;
 
+    /**
+     * Creates a Storage object that uses the specified file path.
+     *
+     * @param filePath the path of the file used to store task data
+     */
     public Storage(String filePath) {
         this.filePath = filePath;
     }

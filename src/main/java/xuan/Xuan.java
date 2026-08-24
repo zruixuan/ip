@@ -11,24 +11,28 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
 
+/**
+ * Runs the Xuan chatbot application.
+ */
 public class Xuan {
+
+    /**
+     * Starts the Xuan chatbot and handles user commands.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         Ui ui = new Ui();
         Parser parser = new Parser();
 
-        //my banner
         ui.showBanner();
 
-        //greeting message
         ui.showGreeting();
 
-        //Initialize the xuan.storage.Storage helper
         Storage storage = new Storage("./data/xuan.txt");
 
-        //initialize the ArrayList
         TaskList taskList;
 
-        //Read the task data in xuan.txt
         try {
             taskList = new TaskList(storage.loadTasks());
         } catch (FileNotFoundException e) {
@@ -143,7 +147,6 @@ public class Xuan {
             } catch (XuanException e) {
                 ui.showError(e.getMessage());
             } catch (IOException e) {
-                //handle the exception about File I/O
                 ui.showError("Sorry, I couldn't save the tasks.");
             }
         }
