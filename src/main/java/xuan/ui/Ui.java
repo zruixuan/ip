@@ -6,14 +6,23 @@ import java.util.Scanner;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+/**
+ * Handles interaction with the user, including reading commands
+ * and displaying messages.
+ */
 public class Ui {
     private Scanner scanner;
 
+    /**
+     * Creates a Ui object for reading user input.
+     */
     public Ui() {
         scanner = new Scanner(System.in);
     }
 
-    //Show my banner
+    /**
+     * Displays the application banner.
+     */
     public void showBanner() {
         String banner = "__  __  _   _    _    _   _\n"
                 + "\\ \\/ / | | | |  / \\  | \\ | |\n"
@@ -24,57 +33,107 @@ public class Ui {
         System.out.println(banner);
     }
 
+    /**
+     * Reads and returns a command entered by the user.
+     *
+     * @return the user's command
+     */
     public String readCommand() {
         System.out.print("You: ");
         return scanner.nextLine();
     }
 
+    /**
+     * Displays the greeting message.
+     */
     public void showGreeting() {
         System.out.println("Xuan: Hello! I'm Xuan.");
         System.out.println("Xuan: What can I do for you? \n");
     }
 
+    /**
+     * Displays the goodbye message.
+     */
     public void showBye() {
         System.out.println("Xuan: Bye. Hope to see you again soon!");
     }
 
+    /**
+     * Displays the specified message.
+     *
+     * @param message the message to display
+     */
     public void showMessage(String message) {
         System.out.println(message);
     }
 
+    /**
+     * Closes the input scanner.
+     */
     public void close() {
         scanner.close();
     }
 
-    //Show all the tasks in the file
+    /**
+     * Displays all tasks in the task list.
+     *
+     * @param taskList the task list to display
+     */
     public void showTaskList(TaskList taskList) {
         System.out.println("Xuan: Here are your tasks:");
         for (int i = 0; i < taskList.size(); i++) {
             System.out.println("      " + (i + 1) + ". " + taskList.get(i));
         }
     }
-    //Show the errors in the file
+
+    /**
+     * Displays an error message.
+     *
+     * @param message the error message to display
+     */
     public void showError(String message) {
         System.out.println("Xuan: " + message);
     }
 
+    /**
+     * Displays information about a newly added task.
+     *
+     * @param task the added task
+     * @param taskCount the current number of tasks
+     */
     public void showAddedTask(Task task, int taskCount) {
         System.out.println("Xuan: Got it. I've added this task:");
         System.out.println("      " + task);
         System.out.println("      Now you have " + taskCount + " tasks in the list.");
     }
 
+    /**
+     * Displays information about a deleted task.
+     *
+     * @param task the deleted task
+     * @param taskCount the current number of tasks
+     */
     public void showDeletedTask(Task task, int taskCount) {
         System.out.println("Xuan: Noted. I've removed this task:");
         System.out.println("      " + task);
         System.out.println("      Now you have " + taskCount + " tasks in the list.");
     }
 
+    /**
+     * Displays a task that has been marked as done.
+     *
+     * @param task the marked task
+     */
     public void showMarkedTask(Task task) {
         System.out.println("Xuan: Nice! I've marked this task as done:");
         System.out.println("      " + task);
     }
 
+    /**
+     * Displays a task that has been marked as not done.
+     *
+     * @param task the unmarked task
+     */
     public void showUnmarkedTask(Task task) {
         System.out.println("Xuan: OK, I've marked this task as not done yet:");
         System.out.println("      " + task);

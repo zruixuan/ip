@@ -5,6 +5,9 @@ import xuan.exception.XuanException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user commands and extracts the information needed to execute them.
+ */
 public class Parser {
     /**
      * Gets the command word from the user's input.

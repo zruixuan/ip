@@ -4,24 +4,34 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
+/**
+ * Represents a deadline task with a specific due date.
+ */
 public class Deadline extends Task {
-    //add specific variable by
     private LocalDate by;
 
+    /**
+     * Creates a Deadline task with the given description and due date.
+     *
+     * @param description the description of the deadline task
+     * @param by the due date of the deadline
+     */
     public Deadline(String description, LocalDate by) {
-        //initialize the "by" variable
         super(description);
         this.by = by;
     }
 
+    /**
+     * Returns the due date of the deadline.
+     *
+     * @return the due date of the deadline
+     */
     public LocalDate getBy() {
         return by;
     }
 
     @Override
     public String toString() {
-        //direct use superclass's toString
-        //Change the stored LocalDate format in to output format
         String formattedDate = by.format(DateTimeFormatter.ofPattern("MMM dd yyyy", Locale.ENGLISH));
         return "[D]" + super.toString() + " (by: " + formattedDate + ")";
     }
