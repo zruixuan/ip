@@ -1,7 +1,96 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Xuan {
+    /**
+     * Saves the tasks to xuan.txt so that they can be loaded again.
+     * Each call overwrites the previous content.
+     *
+     * @param tasks the list of tasks to save
+     * @throws IOException if an error occurs while writing the file
+     */
+    public static void saveTasks(ArrayList<Task> tasks) throws IOException {
+        File directory = new File("./data");
+        directory.mkdirs();
+
+        FileWriter writer = new FileWriter("./data/xuan.txt");
+
+        for (Task task : tasks) {
+            if (task instanceof Todo) {
+                writer.write("T | " + (task.isDone() ? "1" : "0")
+                        + " | " + task.getDescription() + "\n");
+
+            } else if (task instanceof Deadline) {
+                Deadline deadline = (Deadline) task;
+
+                writer.write("D | " + (task.isDone() ? "1" : "0")
+                        + " | " + task.getDescription()
+                        + " | " + deadline.getBy() + "\n");
+
+            } else if (task instanceof Event) {
+                Event event = (Event) task;
+
+                writer.write("E | " + (task.isDone() ? "1" : "0")
+                        + " | " + task.getDescription()
+                        + " | " + event.getFrom()
+                        + " | " + event.getTo() + "\n");
+            }
+        }
+
+        writer.close();
+    }
+
+    /**
+     * Reads the saved tasks from xuan.txt.
+     *
+     * @return the loaded list of tasks
+     * @throws FileNotFoundException if the file cannot be opened
+     */
+    public static ArrayList<Task> loadTasks() throws FileNotFoundException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File("./data/xuan.txt");
+
+        if (!file.exists()) {
+            return tasks;
+        }
+
+        Scanner fileScanner = new Scanner(file);
+
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine();
+            String[] parts = line.split(" \\| ");
+
+            String type = parts[0];
+            boolean isDone = parts[1].equals("1");
+            String description = parts[2];
+
+            Task task;
+            if (type.equals("T")) {
+                task = new Todo(description);
+
+            } else if (type.equals("D")) {
+                String by = parts[3];
+                task = new Deadline(description, by);
+
+            } else {
+                String from = parts[3];
+                String to = parts[4];
+                task = new Event(description, from, to);
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+            tasks.add(task);
+        }
+        fileScanner.close();
+        return tasks;
+    }
+
     public static void main(String[] args) {
         //my banner
         String banner = "__  __  _   _    _    _   _\n"
@@ -13,7 +102,14 @@ public class Xuan {
         System.out.println(banner);
 
         //initialize the ArrayList
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+
+        //Read the task data in xuan.txt
+        try {
+            tasks = loadTasks();
+        } catch (FileNotFoundException e) {
+            tasks = new ArrayList<>();
+        }
 
         //greeting message
         System.out.println("Xuan: Hello! I'm Xuan.");
@@ -55,6 +151,7 @@ public class Xuan {
                     }
 
                     tasks.get(taskNumber - 1).markAsDone();
+                    Xuan.saveTasks(tasks);
 
                     System.out.println("Xuan: Nice! I've marked this task as done:");
                     System.out.println("      " + tasks.get(taskNumber - 1));
@@ -77,6 +174,7 @@ public class Xuan {
                     }
 
                     tasks.get(taskNumber - 1).markAsNotDone();
+                    Xuan.saveTasks(tasks);
 
                     System.out.println("Xuan: OK, I've marked this task as not done yet:");
                     System.out.println("      " + tasks.get(taskNumber - 1));
@@ -100,6 +198,7 @@ public class Xuan {
 
                     //delete the task
                     Task deletedTask = tasks.remove(taskNumber - 1);
+                    Xuan.saveTasks(tasks);
 
                     System.out.println("Xuan: Noted. I've removed this task:");
                     System.out.println("      " + deletedTask);
@@ -118,6 +217,7 @@ public class Xuan {
                     System.out.println("      " + tasks.get(tasks.size() - 1));
 
                     //return the number of tasks
+                    Xuan.saveTasks(tasks);
                     System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     int byIndex = input.indexOf(" /by ");
@@ -143,6 +243,7 @@ public class Xuan {
                     System.out.println("      " + tasks.get(tasks.size() - 1));
 
                     //return the number of tasks
+                    Xuan.saveTasks(tasks);
                     System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     int fromIndex = input.indexOf(" /from ");
@@ -175,12 +276,16 @@ public class Xuan {
                     System.out.println("      " + tasks.get(tasks.size() - 1));
 
                     //return the number of tasks
+                    Xuan.saveTasks(tasks);
                     System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
                 } else {
                     throw new XuanException("Sorry, I don't understand that command.");
                 }
             } catch (XuanException e) {
                 System.out.println("Xuan: " + e.getMessage());
+            } catch (IOException e) {
+                //handle the exception about File I/O
+                System.out.println("Xuan: Sorry, I couldn't save the tasks.");
             }
         }
         scanner.close();
