@@ -1,4 +1,6 @@
 import java.util.Scanner;
+import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Ui {
     private Scanner scanner;
@@ -74,4 +76,21 @@ public class Ui {
         System.out.println("      " + task);
     }
 
+    /**
+     * Shows the deadlines that occur on the specified date.
+     *
+     * @param targetDate the date of the deadlines to display
+     * @param deadlines the list of deadlines occurring on the specified date
+     */
+    public void showDeadlinesOnDate(LocalDate targetDate, ArrayList<Deadline> deadlines) {
+        System.out.println("Xuan: Here are the deadlines on " + targetDate + ":");
+
+        if (deadlines.isEmpty()) {
+            System.out.println("      No deadlines found.");
+        } else {
+            for (int i = 0; i < deadlines.size(); i++) {
+                System.out.println("      " + (i + 1) + ". " + deadlines.get(i));
+            }
+        }
+    }
 }

@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.time.LocalDate;
 
 public class TaskList {
     private ArrayList<Task> tasks;
@@ -25,5 +26,25 @@ public class TaskList {
 
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    /**
+     * Finds all deadlines that occur on the specified date.
+     *
+     * @param targetDate the date to search for deadlines
+     * @return the list of deadlines that occur on the specified date
+     */
+    public ArrayList<Deadline> findDeadlinesOnDate(LocalDate targetDate) {
+        ArrayList<Deadline> matchingDeadlines = new ArrayList<>();
+        for (Task task : tasks) {
+            if (task instanceof Deadline) {
+                Deadline deadline = (Deadline) task;
+
+                if (deadline.getBy().equals(targetDate)) {
+                    matchingDeadlines.add(deadline);
+                }
+            }
+        }
+        return matchingDeadlines;
     }
 }

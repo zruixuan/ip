@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 public class Xuan {
     public static void main(String[] args) {
         Ui ui = new Ui();
+        Parser parser = new Parser();
 
         //my banner
         ui.showBanner();
@@ -30,58 +31,27 @@ public class Xuan {
         while (true) {
             try {
                 String input = ui.readCommand();
+                String command = parser.getCommandWord(input);
 
                 //exiting message
-                if (input.equals("bye")) {
+                if (command.equals("bye")) {
                     ui.showBye();
                     break;
-                } else if (input.equals("list")) {
+                } else if (command.equals("list")) {
                     ui.showTaskList(taskList);
-                } else if (input.equals("find") || input.startsWith("find ")) {
-                    String dateString = input.substring(4).trim();
+                } else if (command.equals("find")) {
+                    LocalDate targetDate = parser.getFindDate(input);
 
-                    if (dateString.isEmpty()) {
-                        throw new XuanException("Please specify a date in yyyy-MM-dd format.");
-                    }
+                    ArrayList<Deadline> deadlines = taskList.findDeadlinesOnDate(targetDate);
 
-                    LocalDate targetDate;
-
-                    try {
-                        targetDate = LocalDate.parse(dateString);
-                    } catch (DateTimeParseException e) {
-                        throw new XuanException("Please enter the date in yyyy-MM-dd format.");
-                    }
-
-                    System.out.println("Xuan: Here are the deadlines on " + dateString + ":");
-
-                    int count = 0;
-
-                    for (Task task : taskList.getTasks()) {
-                        if (task instanceof Deadline) {
-                            Deadline deadline = (Deadline) task;
-
-                            if (deadline.getBy().equals(targetDate)) {
-                                count++;
-                                System.out.println("      " + count + ". " + deadline);
-                            }
-                        }
-                    }
-
-                    if (count == 0) {
-                        System.out.println("      No deadlines found.");
-                    }
-                } else if (input.startsWith("mark")) {
+                    ui.showDeadlinesOnDate(targetDate, deadlines);
+                } else if (command.equals("mark")) {
                     //check whether a task number is given
                     if (!input.startsWith("mark ") || input.substring(5).trim().isEmpty()) {
                         throw new XuanException("Please specify the task number to mark.");
                     }
 
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(input.substring(5).trim());
-                    } catch (NumberFormatException e) {
-                        throw new XuanException("The task number must be a number.");
-                    }
+                    int taskNumber = parser.getTaskNumber(input, 5);
 
                     //check whether the task number exists
                     if (taskNumber < 1 || taskNumber > taskList.size()) {
@@ -92,18 +62,13 @@ public class Xuan {
                     storage.saveTasks(taskList.getTasks());
 
                     ui.showMarkedTask(taskList.get(taskNumber - 1));
-                } else if (input.startsWith("unmark")) {
+                } else if (command.equals("unmark")) {
                     //check whether a task number is given
                     if (!input.startsWith("unmark ") || input.substring(7).trim().isEmpty()) {
                         throw new XuanException("Please specify the task number to unmark.");
                     }
 
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(input.substring(7).trim());
-                    } catch (NumberFormatException e) {
-                        throw new XuanException("The task number must be a number.");
-                    }
+                    int taskNumber = parser.getTaskNumber(input, 7);
 
                     //check whether the task number exists
                     if (taskNumber < 1 || taskNumber > taskList.size()) {
@@ -114,18 +79,13 @@ public class Xuan {
                     storage.saveTasks(taskList.getTasks());
 
                     ui.showUnmarkedTask(taskList.get(taskNumber - 1));
-                } else if (input.startsWith("delete")) {
+                } else if (command.equals("delete")) {
                     //check whether a task number is given
                     if (!input.startsWith("delete ") || input.substring(7).trim().isEmpty()) {
                         throw new XuanException("Please specify the task number to delete.");
                     }
 
-                    int taskNumber;
-                    try {
-                        taskNumber = Integer.parseInt(input.substring(7).trim());
-                    } catch (NumberFormatException e) {
-                        throw new XuanException("The task number must be a number.");
-                    }
+                    int taskNumber = parser.getTaskNumber(input, 7);
 
                     //check whether the task number exists
                     if (taskNumber < 1 || taskNumber > taskList.size()) {
@@ -137,13 +97,9 @@ public class Xuan {
                     storage.saveTasks(taskList.getTasks());
 
                     ui.showDeletedTask(deletedTask, taskList.size());
-                } else if (input.equals("todo") || input.startsWith("todo ")) {
-                    String description = input.substring(4).trim();
-
-                    //throw exception
-                    if (description.isEmpty()) {
-                        throw new XuanException("The description of a todo cannot be empty.");
-                    }
+                } else if (command.equals("todo")) {
+                    //Get the description
+                    String description = parser.getDescription(input, 4);
 
                     //create new "Todo" tasks
                     taskList.add(new Todo(description));
@@ -151,32 +107,10 @@ public class Xuan {
 
                     //Store the tasks data
                     storage.saveTasks(taskList.getTasks());
-                } else if (input.equals("deadline") || input.startsWith("deadline ")) {
-                    int byIndex = input.indexOf(" /by ");
-
-                    //throw exceptions
-                    if (byIndex == -1) {
-                        throw new XuanException("Please specify the deadline using /by.");
-                    }
-
-                    String description = input.substring(8, byIndex).trim();
-                    String byString = input.substring(byIndex + 5).trim();
-
-                    if (description.isEmpty()) {
-                        throw new XuanException("The description of a deadline cannot be empty.");
-                    }
-                    if (byString.isEmpty()) {
-                        throw new XuanException("The deadline time cannot be empty.");
-                    }
-
-                    LocalDate by;
-
-                    //Change the string format to LocalDate format
-                    try {
-                        by = LocalDate.parse(byString);
-                    } catch (DateTimeParseException e) {
-                        throw new XuanException("Please enter the deadline in yyyy-MM-dd format.");
-                    }
+                } else if (command.equals("deadline")) {
+                    //Get the description and by of deadline items
+                    String description = parser.getDeadlineDescription(input);
+                    LocalDate by = parser.getDeadlineDate(input);
 
                     //create new "Deadline" tasks
                     taskList.add(new Deadline(description, by));
@@ -184,30 +118,11 @@ public class Xuan {
 
                     //Store the tasks data
                     storage.saveTasks(taskList.getTasks());
-                } else if (input.equals("event") || input.startsWith("event ")) {
-                    int fromIndex = input.indexOf(" /from ");
-                    int toIndex = input.indexOf(" /to ");
-
-                    //throw exceptions
-                    if (fromIndex == -1 || toIndex == -1 || fromIndex >= toIndex) {
-                        throw new XuanException("Please specify the event time using /from and /to in the correct order.");
-                    }
-
-                    String description = input.substring(5, fromIndex).trim();
-                    String from = input.substring(fromIndex + 7, toIndex).trim();
-                    String to = input.substring(toIndex + 5).trim();
-
-                    if (description.isEmpty()) {
-                        throw new XuanException("The description of an event cannot be empty.");
-                    }
-
-                    if (from.isEmpty()) {
-                        throw new XuanException("The start time of an event cannot be empty.");
-                    }
-
-                    if (to.isEmpty()) {
-                        throw new XuanException("The end time of an event cannot be empty.");
-                    }
+                } else if (command.equals("event")) {
+                    //Get the description and from and to of event items
+                    String description = parser.getEventDescription(input);
+                    String from = parser.getEventFrom(input);
+                    String to = parser.getEventTo(input);
 
                     //create new "Event" tasks
                     taskList.add(new Event(description, from, to));
