@@ -2,19 +2,17 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.io.FileNotFoundException;
 
 public class Xuan {
     public static void main(String[] args) {
-        //my banner
-        String banner = "__  __  _   _    _    _   _\n"
-                + "\\ \\/ / | | | |  / \\  | \\ | |\n"
-                + " \\  /  | | | | / _ \\ |  \\| |\n"
-                + " /  \\  | |_| |/ ___ \\| |\\  |\n"
-                + "/_/\\_\\  \\___//_/   \\_\\_| \\_|\n";
+        Ui ui = new Ui();
 
-        System.out.println(banner);
+        //my banner
+        ui.showBanner();
+
+        //greeting message
+        ui.showGreeting();
 
         //Initialize the Storage helper
         Storage storage = new Storage("./data/xuan.txt");
@@ -29,27 +27,16 @@ public class Xuan {
             taskList = new TaskList(new ArrayList<>());
         }
 
-        //greeting message
-        System.out.println("Xuan: Hello! I'm Xuan.");
-        System.out.println("Xuan: What can I do for you? \n");
-
-        //get the content users type in
-        Scanner scanner = new Scanner(System.in);
-
         while (true) {
             try {
-                System.out.print("You: ");
-                String input = scanner.nextLine();
+                String input = ui.readCommand();
 
                 //exiting message
                 if (input.equals("bye")) {
-                    System.out.println("Xuan: Bye. Hope to see you again soon!");
+                    ui.showBye();
                     break;
                 } else if (input.equals("list")) {
-                    System.out.println("Xuan: Here are your tasks:");
-                    for (int i = 0; i < taskList.size(); i++) {
-                        System.out.println("      " + (i + 1) + ". " + taskList.get(i));
-                    }
+                    ui.showTaskList(taskList);
                 } else if (input.equals("find") || input.startsWith("find ")) {
                     String dateString = input.substring(4).trim();
 
@@ -104,8 +91,7 @@ public class Xuan {
                     taskList.get(taskNumber - 1).markAsDone();
                     storage.saveTasks(taskList.getTasks());
 
-                    System.out.println("Xuan: Nice! I've marked this task as done:");
-                    System.out.println("      " + taskList.get(taskNumber - 1));
+                    ui.showMarkedTask(taskList.get(taskNumber - 1));
                 } else if (input.startsWith("unmark")) {
                     //check whether a task number is given
                     if (!input.startsWith("unmark ") || input.substring(7).trim().isEmpty()) {
@@ -127,8 +113,7 @@ public class Xuan {
                     taskList.get(taskNumber - 1).markAsNotDone();
                     storage.saveTasks(taskList.getTasks());
 
-                    System.out.println("Xuan: OK, I've marked this task as not done yet:");
-                    System.out.println("      " + taskList.get(taskNumber - 1));
+                    ui.showUnmarkedTask(taskList.get(taskNumber - 1));
                 } else if (input.startsWith("delete")) {
                     //check whether a task number is given
                     if (!input.startsWith("delete ") || input.substring(7).trim().isEmpty()) {
@@ -151,9 +136,7 @@ public class Xuan {
                     Task deletedTask = taskList.delete(taskNumber - 1);
                     storage.saveTasks(taskList.getTasks());
 
-                    System.out.println("Xuan: Noted. I've removed this task:");
-                    System.out.println("      " + deletedTask);
-                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
+                    ui.showDeletedTask(deletedTask, taskList.size());
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.substring(4).trim();
 
@@ -164,12 +147,10 @@ public class Xuan {
 
                     //create new "Todo" tasks
                     taskList.add(new Todo(description));
-                    System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + taskList.get(taskList.size() - 1));
+                    ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 
-                    //return the number of tasks
+                    //Store the tasks data
                     storage.saveTasks(taskList.getTasks());
-                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     int byIndex = input.indexOf(" /by ");
 
@@ -199,12 +180,10 @@ public class Xuan {
 
                     //create new "Deadline" tasks
                     taskList.add(new Deadline(description, by));
-                    System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + taskList.get(taskList.size() - 1));
+                    ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 
-                    //return the number of tasks
+                    //Store the tasks data
                     storage.saveTasks(taskList.getTasks());
-                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     int fromIndex = input.indexOf(" /from ");
                     int toIndex = input.indexOf(" /to ");
@@ -232,22 +211,20 @@ public class Xuan {
 
                     //create new "Event" tasks
                     taskList.add(new Event(description, from, to));
-                    System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + taskList.get(taskList.size() - 1));
+                    ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 
-                    //return the number of tasks
+                    //Store the tasks data
                     storage.saveTasks(taskList.getTasks());
-                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else {
                     throw new XuanException("Sorry, I don't understand that command.");
                 }
             } catch (XuanException e) {
-                System.out.println("Xuan: " + e.getMessage());
+                ui.showError(e.getMessage());
             } catch (IOException e) {
                 //handle the exception about File I/O
-                System.out.println("Xuan: Sorry, I couldn't save the tasks.");
+                ui.showError("Sorry, I couldn't save the tasks.");
             }
         }
-        scanner.close();
+        ui.close();
     }
 }
