@@ -1,9 +1,9 @@
 package xuan.parser;
 
-import xuan.exception.XuanException;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+
+import xuan.exception.XuanException;
 
 /**
  * Parses user commands and extracts the information needed to execute them.
@@ -54,7 +54,6 @@ public class Parser {
     }
 
 
-    //TODO
     /**
      * Gets the task description from the user's input.
      *
@@ -74,7 +73,6 @@ public class Parser {
     }
 
 
-    //DEADLINE
     /**
      * Gets the description of a deadline from the user's input.
      *
@@ -127,7 +125,6 @@ public class Parser {
         }
     }
 
-    //EVENT
     /**
      * Gets the description of an event from the user's input.
      *
@@ -202,7 +199,6 @@ public class Parser {
         return to;
     }
 
-    //FIND
     /**
      * Gets the date from a find command.
      *

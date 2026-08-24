@@ -1,10 +1,12 @@
 package xuan.ui;
 
-import xuan.task.*;
-
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import xuan.task.Deadline;
+import xuan.task.Task;
+import xuan.task.TaskList;
 
 /**
  * Handles interaction with the user, including reading commands

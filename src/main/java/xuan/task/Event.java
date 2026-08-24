@@ -15,7 +15,6 @@ public class Event extends Task {
      * @param to the end time of the event
      */
     public Event(String description, String from, String to) {
-        //initialize the "from" & "to" variable
         super(description);
         this.from = from;
         this.to = to;
