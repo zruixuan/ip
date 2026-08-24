@@ -1,5 +1,12 @@
+package xuan;
+
+import xuan.exception.XuanException;
+import xuan.parser.Parser;
+import xuan.storage.Storage;
+import xuan.ui.Ui;
+import xuan.task.*;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.io.FileNotFoundException;
@@ -15,7 +22,7 @@ public class Xuan {
         //greeting message
         ui.showGreeting();
 
-        //Initialize the Storage helper
+        //Initialize the xuan.storage.Storage helper
         Storage storage = new Storage("./data/xuan.txt");
 
         //initialize the ArrayList
@@ -101,7 +108,7 @@ public class Xuan {
                     //Get the description
                     String description = parser.getDescription(input, 4);
 
-                    //create new "Todo" tasks
+                    //create new "xuan.task.Todo" tasks
                     taskList.add(new Todo(description));
                     ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 
@@ -112,7 +119,7 @@ public class Xuan {
                     String description = parser.getDeadlineDescription(input);
                     LocalDate by = parser.getDeadlineDate(input);
 
-                    //create new "Deadline" tasks
+                    //create new "xuan.task.Deadline" tasks
                     taskList.add(new Deadline(description, by));
                     ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 
@@ -124,7 +131,7 @@ public class Xuan {
                     String from = parser.getEventFrom(input);
                     String to = parser.getEventTo(input);
 
-                    //create new "Event" tasks
+                    //create new "xuan.task.Event" tasks
                     taskList.add(new Event(description, from, to));
                     ui.showAddedTask(taskList.get(taskList.size() - 1), taskList.size());
 

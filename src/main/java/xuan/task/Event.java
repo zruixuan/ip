@@ -1,3 +1,5 @@
+package xuan.task;
+
 public class Event extends Task {
     //add 2 specific variables from, to
     private String from;
