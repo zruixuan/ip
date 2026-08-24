@@ -47,6 +47,12 @@ public class Xuan {
                 } else if (command.equals("list")) {
                     ui.showTaskList(taskList);
                 } else if (command.equals("find")) {
+                    String keyword = parser.getFindKeyword(input);
+                    ArrayList<Task> matchingTasks = taskList.findTasks(keyword);
+
+                    ui.showMatchingTasks(matchingTasks);
+
+                } else if (command.equals("finddate")) {
                     LocalDate targetDate = parser.getFindDate(input);
 
                     ArrayList<Deadline> deadlines = taskList.findDeadlinesOnDate(targetDate);

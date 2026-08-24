@@ -201,14 +201,14 @@ public class Parser {
 
     //FIND
     /**
-     * Gets the date from a find command.
+     * Gets the date from a finddate command.
      *
-     * @param input the full find command entered by the user
+     * @param input the full finddate command entered by the user
      * @return the date specified by the user
      * @throws XuanException if the date is missing or has an invalid format
      */
     public LocalDate getFindDate(String input) throws XuanException {
-        String dateString = input.substring(4).trim();
+        String dateString = input.substring(8).trim();
 
         if (dateString.isEmpty()) {
             throw new XuanException("Please specify a date in yyyy-MM-dd format.");
@@ -219,5 +219,22 @@ public class Parser {
         } catch (DateTimeParseException e) {
             throw new XuanException("Please enter the date in yyyy-MM-dd format.");
         }
+    }
+
+    /**
+     * Gets the keyword from a find command.
+     *
+     * @param input the full find command entered by the user
+     * @return the keyword to search for
+     * @throws XuanException if the keyword is missing
+     */
+    public String getFindKeyword(String input) throws XuanException {
+        String keyword = input.substring(4).trim();
+
+        if (keyword.isEmpty()) {
+            throw new XuanException("Please specify a keyword to search for.");
+        }
+
+        return keyword;
     }
 }
