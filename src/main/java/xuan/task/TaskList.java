@@ -1,7 +1,7 @@
 package xuan.task;
 
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class TaskList {
     private ArrayList<Task> tasks;

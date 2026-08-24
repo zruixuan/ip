@@ -1,10 +1,12 @@
 package xuan.ui;
 
-import xuan.task.*;
-
-import java.util.Scanner;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Scanner;
+
+import xuan.task.Deadline;
+import xuan.task.Task;
+import xuan.task.TaskList;
 
 public class Ui {
     private Scanner scanner;
@@ -13,7 +15,6 @@ public class Ui {
         scanner = new Scanner(System.in);
     }
 
-    //Show my banner
     public void showBanner() {
         String banner = "__  __  _   _    _    _   _\n"
                 + "\\ \\/ / | | | |  / \\  | \\ | |\n"
@@ -46,14 +47,13 @@ public class Ui {
         scanner.close();
     }
 
-    //Show all the tasks in the file
     public void showTaskList(TaskList taskList) {
         System.out.println("Xuan: Here are your tasks:");
         for (int i = 0; i < taskList.size(); i++) {
             System.out.println("      " + (i + 1) + ". " + taskList.get(i));
         }
     }
-    //Show the errors in the file
+
     public void showError(String message) {
         System.out.println("Xuan: " + message);
     }

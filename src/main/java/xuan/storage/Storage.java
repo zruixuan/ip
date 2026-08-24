@@ -1,10 +1,5 @@
 package xuan.storage;
 
-import xuan.task.Deadline;
-import xuan.task.Event;
-import xuan.task.Task;
-import xuan.task.Todo;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -12,6 +7,11 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import xuan.task.Deadline;
+import xuan.task.Event;
+import xuan.task.Task;
+import xuan.task.Todo;
 
 public class Storage {
 
