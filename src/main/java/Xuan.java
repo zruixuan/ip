@@ -20,13 +20,13 @@ public class Xuan {
         Storage storage = new Storage("./data/xuan.txt");
 
         //initialize the ArrayList
-        ArrayList<Task> tasks;
+        TaskList taskList;
 
         //Read the task data in xuan.txt
         try {
-            tasks = storage.loadTasks();
+            taskList = new TaskList(storage.loadTasks());
         } catch (FileNotFoundException e) {
-            tasks = new ArrayList<>();
+            taskList = new TaskList(new ArrayList<>());
         }
 
         //greeting message
@@ -47,8 +47,8 @@ public class Xuan {
                     break;
                 } else if (input.equals("list")) {
                     System.out.println("Xuan: Here are your tasks:");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        System.out.println("      " + (i + 1) + ". " + tasks.get(i));
+                    for (int i = 0; i < taskList.size(); i++) {
+                        System.out.println("      " + (i + 1) + ". " + taskList.get(i));
                     }
                 } else if (input.equals("find") || input.startsWith("find ")) {
                     String dateString = input.substring(4).trim();
@@ -69,7 +69,7 @@ public class Xuan {
 
                     int count = 0;
 
-                    for (Task task : tasks) {
+                    for (Task task : taskList.getTasks()) {
                         if (task instanceof Deadline) {
                             Deadline deadline = (Deadline) task;
 
@@ -97,15 +97,15 @@ public class Xuan {
                     }
 
                     //check whether the task number exists
-                    if (taskNumber < 1 || taskNumber > tasks.size()) {
+                    if (taskNumber < 1 || taskNumber > taskList.size()) {
                         throw new XuanException("That task number does not exist.");
                     }
 
-                    tasks.get(taskNumber - 1).markAsDone();
-                    storage.saveTasks(tasks);
+                    taskList.get(taskNumber - 1).markAsDone();
+                    storage.saveTasks(taskList.getTasks());
 
                     System.out.println("Xuan: Nice! I've marked this task as done:");
-                    System.out.println("      " + tasks.get(taskNumber - 1));
+                    System.out.println("      " + taskList.get(taskNumber - 1));
                 } else if (input.startsWith("unmark")) {
                     //check whether a task number is given
                     if (!input.startsWith("unmark ") || input.substring(7).trim().isEmpty()) {
@@ -120,15 +120,15 @@ public class Xuan {
                     }
 
                     //check whether the task number exists
-                    if (taskNumber < 1 || taskNumber > tasks.size()) {
+                    if (taskNumber < 1 || taskNumber > taskList.size()) {
                         throw new XuanException("That task number does not exist.");
                     }
 
-                    tasks.get(taskNumber - 1).markAsNotDone();
-                    storage.saveTasks(tasks);
+                    taskList.get(taskNumber - 1).markAsNotDone();
+                    storage.saveTasks(taskList.getTasks());
 
                     System.out.println("Xuan: OK, I've marked this task as not done yet:");
-                    System.out.println("      " + tasks.get(taskNumber - 1));
+                    System.out.println("      " + taskList.get(taskNumber - 1));
                 } else if (input.startsWith("delete")) {
                     //check whether a task number is given
                     if (!input.startsWith("delete ") || input.substring(7).trim().isEmpty()) {
@@ -143,17 +143,17 @@ public class Xuan {
                     }
 
                     //check whether the task number exists
-                    if (taskNumber < 1 || taskNumber > tasks.size()) {
+                    if (taskNumber < 1 || taskNumber > taskList.size()) {
                         throw new XuanException("That task number does not exist.");
                     }
 
                     //delete the task
-                    Task deletedTask = tasks.remove(taskNumber - 1);
-                    storage.saveTasks(tasks);
+                    Task deletedTask = taskList.delete(taskNumber - 1);
+                    storage.saveTasks(taskList.getTasks());
 
                     System.out.println("Xuan: Noted. I've removed this task:");
                     System.out.println("      " + deletedTask);
-                    System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
+                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else if (input.equals("todo") || input.startsWith("todo ")) {
                     String description = input.substring(4).trim();
 
@@ -163,13 +163,13 @@ public class Xuan {
                     }
 
                     //create new "Todo" tasks
-                    tasks.add(new Todo(description));
+                    taskList.add(new Todo(description));
                     System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + tasks.get(tasks.size() - 1));
+                    System.out.println("      " + taskList.get(taskList.size() - 1));
 
                     //return the number of tasks
-                    storage.saveTasks(tasks);
-                    System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
+                    storage.saveTasks(taskList.getTasks());
+                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else if (input.equals("deadline") || input.startsWith("deadline ")) {
                     int byIndex = input.indexOf(" /by ");
 
@@ -198,13 +198,13 @@ public class Xuan {
                     }
 
                     //create new "Deadline" tasks
-                    tasks.add(new Deadline(description, by));
+                    taskList.add(new Deadline(description, by));
                     System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + tasks.get(tasks.size() - 1));
+                    System.out.println("      " + taskList.get(taskList.size() - 1));
 
                     //return the number of tasks
-                    storage.saveTasks(tasks);
-                    System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
+                    storage.saveTasks(taskList.getTasks());
+                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else if (input.equals("event") || input.startsWith("event ")) {
                     int fromIndex = input.indexOf(" /from ");
                     int toIndex = input.indexOf(" /to ");
@@ -231,13 +231,13 @@ public class Xuan {
                     }
 
                     //create new "Event" tasks
-                    tasks.add(new Event(description, from, to));
+                    taskList.add(new Event(description, from, to));
                     System.out.println("Xuan: Got it. I've added this task:");
-                    System.out.println("      " + tasks.get(tasks.size() - 1));
+                    System.out.println("      " + taskList.get(taskList.size() - 1));
 
                     //return the number of tasks
-                    storage.saveTasks(tasks);
-                    System.out.println("      Now you have " + tasks.size() + " tasks in the list.");
+                    storage.saveTasks(taskList.getTasks());
+                    System.out.println("      Now you have " + taskList.size() + " tasks in the list.");
                 } else {
                     throw new XuanException("Sorry, I don't understand that command.");
                 }
