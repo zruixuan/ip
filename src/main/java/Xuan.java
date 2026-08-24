@@ -3,11 +3,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 public class Xuan {
-    /** Save the data to xuan.txt in order to reload data
-      * Each time use saveTasks function overwrite the former content
-      */
+    /**
+     * Saves the tasks to xuan.txt so that they can be loaded again.
+     * Each call overwrites the previous content.
+     *
+     * @param tasks the list of tasks to save
+     * @throws IOException if an error occurs while writing the file
+     */
     public static void saveTasks(ArrayList<Task> tasks) throws IOException {
         File directory = new File("./data");
         directory.mkdirs();
@@ -39,6 +44,53 @@ public class Xuan {
         writer.close();
     }
 
+    /**
+     * Reads the saved tasks from xuan.txt.
+     *
+     * @return the loaded list of tasks
+     * @throws FileNotFoundException if the file cannot be opened
+     */
+    public static ArrayList<Task> loadTasks() throws FileNotFoundException {
+        ArrayList<Task> tasks = new ArrayList<>();
+        File file = new File("./data/xuan.txt");
+
+        if (!file.exists()) {
+            return tasks;
+        }
+
+        Scanner fileScanner = new Scanner(file);
+
+        while (fileScanner.hasNextLine()) {
+            String line = fileScanner.nextLine();
+            String[] parts = line.split(" \\| ");
+
+            String type = parts[0];
+            boolean isDone = parts[1].equals("1");
+            String description = parts[2];
+
+            Task task;
+            if (type.equals("T")) {
+                task = new Todo(description);
+
+            } else if (type.equals("D")) {
+                String by = parts[3];
+                task = new Deadline(description, by);
+
+            } else {
+                String from = parts[3];
+                String to = parts[4];
+                task = new Event(description, from, to);
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+            tasks.add(task);
+        }
+        fileScanner.close();
+        return tasks;
+    }
+
     public static void main(String[] args) {
         //my banner
         String banner = "__  __  _   _    _    _   _\n"
@@ -50,7 +102,14 @@ public class Xuan {
         System.out.println(banner);
 
         //initialize the ArrayList
-        ArrayList<Task> tasks = new ArrayList<>();
+        ArrayList<Task> tasks;
+
+        //Read the task data in xuan.txt
+        try {
+            tasks = loadTasks();
+        } catch (FileNotFoundException e) {
+            tasks = new ArrayList<>();
+        }
 
         //greeting message
         System.out.println("Xuan: Hello! I'm Xuan.");
