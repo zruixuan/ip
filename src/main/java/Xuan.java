@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -73,9 +75,8 @@ public class Xuan {
                 task = new Todo(description);
 
             } else if (type.equals("D")) {
-                String by = parts[3];
+                LocalDate by = LocalDate.parse(parts[3]);
                 task = new Deadline(description, by);
-
             } else {
                 String from = parts[3];
                 String to = parts[4];
@@ -131,6 +132,39 @@ public class Xuan {
                     System.out.println("Xuan: Here are your tasks:");
                     for (int i = 0; i < tasks.size(); i++) {
                         System.out.println("      " + (i + 1) + ". " + tasks.get(i));
+                    }
+                } else if (input.equals("find") || input.startsWith("find ")) {
+                    String dateString = input.substring(4).trim();
+
+                    if (dateString.isEmpty()) {
+                        throw new XuanException("Please specify a date in yyyy-MM-dd format.");
+                    }
+
+                    LocalDate targetDate;
+
+                    try {
+                        targetDate = LocalDate.parse(dateString);
+                    } catch (DateTimeParseException e) {
+                        throw new XuanException("Please enter the date in yyyy-MM-dd format.");
+                    }
+
+                    System.out.println("Xuan: Here are the deadlines on " + dateString + ":");
+
+                    int count = 0;
+
+                    for (Task task : tasks) {
+                        if (task instanceof Deadline) {
+                            Deadline deadline = (Deadline) task;
+
+                            if (deadline.getBy().equals(targetDate)) {
+                                count++;
+                                System.out.println("      " + count + ". " + deadline);
+                            }
+                        }
+                    }
+
+                    if (count == 0) {
+                        System.out.println("      No deadlines found.");
                     }
                 } else if (input.startsWith("mark")) {
                     //check whether a task number is given
@@ -228,13 +262,22 @@ public class Xuan {
                     }
 
                     String description = input.substring(8, byIndex).trim();
-                    String by = input.substring(byIndex + 5).trim();
+                    String byString = input.substring(byIndex + 5).trim();
 
                     if (description.isEmpty()) {
                         throw new XuanException("The description of a deadline cannot be empty.");
                     }
-                    if (by.isEmpty()) {
+                    if (byString.isEmpty()) {
                         throw new XuanException("The deadline time cannot be empty.");
+                    }
+
+                    LocalDate by;
+
+                    //Change the string format to LocalDate format
+                    try {
+                        by = LocalDate.parse(byString);
+                    } catch (DateTimeParseException e) {
+                        throw new XuanException("Please enter the deadline in yyyy-MM-dd format.");
                     }
 
                     //create new "Deadline" tasks
