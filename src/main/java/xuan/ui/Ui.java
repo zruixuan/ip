@@ -59,7 +59,10 @@ public class Ui {
      * Displays the greeting message.
      */
     public void showGreeting() {
-        System.out.println(getGreetingMessage());
+        showMessage(
+                "Xuan: Hello! I'm Xuan.",
+                "Xuan: What can I do for you?"
+        );
         System.out.println();
     }
 
@@ -80,12 +83,14 @@ public class Ui {
     }
 
     /**
-     * Displays the specified message.
+     * Displays one or more specified messages.
      *
-     * @param message the message to display
+     * @param messages the messages to display
      */
-    public void showMessage(String message) {
-        System.out.println(message);
+    public void showMessage(String... messages) {
+        for (String message : messages) {
+            System.out.println(message);
+        }
     }
 
     /**
