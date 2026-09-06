@@ -122,6 +122,8 @@ public class Xuan {
                             "That task number does not exist.");
                 }
 
+                assert taskNumber >= 1 && taskNumber <= taskList.size();
+
                 Task task = taskList.get(taskNumber - 1);
                 task.markAsDone();
                 storage.saveTasks(taskList.getTasks());
@@ -141,6 +143,8 @@ public class Xuan {
                             "That task number does not exist.");
                 }
 
+                assert taskNumber >= 1 && taskNumber <= taskList.size();
+
                 Task task = taskList.get(taskNumber - 1);
                 task.markAsNotDone();
                 storage.saveTasks(taskList.getTasks());
@@ -159,6 +163,8 @@ public class Xuan {
                     throw new XuanException(
                             "That task number does not exist.");
                 }
+
+                assert taskNumber >= 1 && taskNumber <= taskList.size();
 
                 Task deletedTask = taskList.delete(taskNumber - 1);
                 storage.saveTasks(taskList.getTasks());

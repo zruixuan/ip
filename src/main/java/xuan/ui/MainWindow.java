@@ -72,6 +72,7 @@ public class MainWindow extends AnchorPane {
      */
     @FXML
     private void handleUserInput() {
+        assert xuan != null;
         String input = userInput.getText();
 
         if (input.isBlank()) {
