@@ -81,12 +81,21 @@ public class MainWindow extends AnchorPane {
 
         String response = xuan.getResponse(input);
 
+        DialogBox userDialog = DialogBox.getUserDialog(
+                input, new ImageView(userImage));
+
+        DialogBox xuanDialog;
+
+        if (input.trim().equals("help")) {
+            xuanDialog = DialogBox.getXuanHelpDialog(
+                    response, new ImageView(xuanImage));
+        } else {
+            xuanDialog = DialogBox.getXuanDialog(
+                    response, new ImageView(xuanImage));
+        }
+
         dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(
-                        input, new ImageView(userImage)),
-                DialogBox.getXuanDialog(
-                        response, new ImageView(xuanImage))
-        );
+                userDialog, xuanDialog);
 
         userInput.clear();
     }

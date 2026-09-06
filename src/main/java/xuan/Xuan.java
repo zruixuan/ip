@@ -263,6 +263,22 @@ public class Xuan {
     }
 
     /**
+     * Returns the help message if the help command is valid.
+     *
+     * @param input the full help command entered by the user
+     * @return the help message
+     * @throws XuanException if the help command contains arguments
+     */
+    private String handleHelp(String input) throws XuanException {
+        if (!input.trim().equals("help")) {
+            throw new XuanException(
+                    "The help command does not take any arguments.");
+        }
+
+        return ui.getHelpMessage();
+    }
+
+    /**
      * Returns Xuan's response to the given user input.
      *
      * @param input the user input
@@ -273,6 +289,8 @@ public class Xuan {
             String command = parser.getCommandWord(input);
             if (command.equals("bye")) {
                 return ui.getByeMessage();
+            } else if (command.equals("help")) {
+                return handleHelp(input);
             } else if (command.equals("list")) {
                 return ui.getTaskListMessage(taskList);
             } else if (command.equals("find")) {
