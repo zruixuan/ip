@@ -2,6 +2,7 @@ package xuan.task;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 /**
  * Manages a list of tasks and provides operations on the task list.
@@ -72,17 +73,11 @@ public class TaskList {
      * @return the list of deadlines that occur on the specified date
      */
     public ArrayList<Deadline> findDeadlinesOnDate(LocalDate targetDate) {
-        ArrayList<Deadline> matchingDeadlines = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task instanceof Deadline) {
-                Deadline deadline = (Deadline) task;
-
-                if (deadline.getBy().equals(targetDate)) {
-                    matchingDeadlines.add(deadline);
-                }
-            }
-        }
-        return matchingDeadlines;
+        return tasks.stream()
+                .filter(task -> task instanceof Deadline)
+                .map(task -> (Deadline) task)
+                .filter(deadline -> deadline.getBy().equals(targetDate))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     /**
@@ -92,14 +87,8 @@ public class TaskList {
      * @return the list of tasks whose descriptions contain the keyword
      */
     public ArrayList<Task> findTasks(String keyword) {
-        ArrayList<Task> matchingTasks = new ArrayList<>();
-
-        for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
-                matchingTasks.add(task);
-            }
-        }
-
-        return matchingTasks;
+        return tasks.stream()
+                .filter(task -> task.getDescription().contains(keyword))
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }
