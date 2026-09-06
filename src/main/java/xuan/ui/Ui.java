@@ -51,8 +51,8 @@ public class Ui {
      * @return the greeting message
      */
     public String getGreetingMessage() {
-        return "Xuan: Hello! I'm Xuan.\n"
-                + "Xuan: What can I do for you?";
+        return "Hello! I'm Xuan.\n"
+                + "What can I do for you?";
     }
 
     /**
@@ -61,7 +61,7 @@ public class Ui {
     public void showGreeting() {
         showMessage(
                 "Xuan: Hello! I'm Xuan.",
-                "Xuan: What can I do for you?"
+                "What can I do for you?"
         );
         System.out.println();
     }
@@ -108,7 +108,7 @@ public class Ui {
      */
     public String getTaskListMessage(TaskList taskList) {
         StringBuilder message = new StringBuilder(
-                "Xuan: Here are your tasks:");
+                "Here are your tasks:");
 
         for (int i = 0; i < taskList.size(); i++) {
             message.append("\n      ")
@@ -156,7 +156,7 @@ public class Ui {
      * @return the formatted message about the added task
      */
     public String getAddedTaskMessage(Task task, int taskCount) {
-        return "Xuan: Got it. I've added this task:\n"
+        return "Got it. I've added this task:\n"
                 + "      " + task + "\n"
                 + "      Now you have " + taskCount
                 + " tasks in the list.";
@@ -180,7 +180,7 @@ public class Ui {
      * @return the formatted message about the deleted task
      */
     public String getDeletedTaskMessage(Task task, int taskCount) {
-        return "Xuan: Noted. I've removed this task:\n"
+        return "Noted. I've removed this task:\n"
                 + "      " + task + "\n"
                 + "      Now you have " + taskCount
                 + " tasks in the list.";
@@ -203,7 +203,7 @@ public class Ui {
      * @return the formatted message about the marked task
      */
     public String getMarkedTaskMessage(Task task) {
-        return "Xuan: Nice! I've marked this task as done:\n"
+        return "Nice! I've marked this task as done:\n"
                 + "      " + task;
     }
 
@@ -223,7 +223,7 @@ public class Ui {
      * @return the formatted message about the unmarked task
      */
     public String getUnmarkedTaskMessage(Task task) {
-        return "Xuan: OK, I've marked this task as not done yet:\n"
+        return "OK, I've marked this task as not done yet:\n"
                 + "      " + task;
     }
 
@@ -246,7 +246,7 @@ public class Ui {
     public String getDeadlinesOnDateMessage(
             LocalDate targetDate, ArrayList<Deadline> deadlines) {
         StringBuilder message = new StringBuilder(
-                "Xuan: Here are the deadlines on "
+                "Here are the deadlines on "
                         + targetDate + ":");
 
         if (deadlines.isEmpty()) {
@@ -283,7 +283,7 @@ public class Ui {
      */
     public String getMatchingTasksMessage(ArrayList<Task> tasks) {
         StringBuilder message = new StringBuilder(
-                "Xuan: Here are the matching tasks in your list:");
+                "Here are the matching tasks in your list:");
 
         for (int i = 0; i < tasks.size(); i++) {
             message.append("\n      ")
