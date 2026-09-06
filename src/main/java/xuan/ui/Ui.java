@@ -303,4 +303,61 @@ public class Ui {
     public void showMatchingTasks(ArrayList<Task> tasks) {
         System.out.println(getMatchingTasksMessage(tasks));
     }
+
+    /**
+     * Returns the help message containing the available commands.
+     *
+     * @return the formatted help message
+     */
+    public String getHelpMessage() {
+        return String.join("\n",
+                "Xuan is a task manager that helps you manage todos, "
+                        + "deadlines, and events.",
+                "",
+                "Here are the commands you can use:",
+                "",
+                "help",
+                "    Shows this help message.",
+                "",
+                "list",
+                "    Shows all tasks in your task list.",
+                "",
+                "todo <description>",
+                "    Adds a todo task.",
+                "    Example: todo read book",
+                "",
+                "deadline <description> /by yyyy-MM-dd",
+                "    Adds a deadline task.",
+                "    The date must use the format yyyy-MM-dd.",
+                "    Example: deadline submit report /by 2026-09-10",
+                "",
+                "event <description> /from <start time> /to <end time>",
+                "    Adds an event task.",
+                "    The start and end times can be written as text.",
+                "    Example: event meeting /from 2pm /to 4pm",
+                "",
+                "mark <task number>",
+                "    Marks a task as done.",
+                "    Example: mark 2",
+                "",
+                "unmark <task number>",
+                "    Marks a task as not done.",
+                "    Example: unmark 2",
+                "",
+                "delete <task number>",
+                "    Deletes a task from the task list.",
+                "    Example: delete 2",
+                "",
+                "find <keyword>",
+                "    Finds tasks whose descriptions contain the keyword.",
+                "    Example: find book",
+                "",
+                "finddate yyyy-MM-dd",
+                "    Finds deadlines that occur on the specified date.",
+                "    The date must use the format yyyy-MM-dd.",
+                "    Example: finddate 2026-09-10",
+                "",
+                "bye",
+                "    Exits Xuan.");
+    }
 }

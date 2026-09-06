@@ -9,6 +9,11 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 
 /**
@@ -79,6 +84,75 @@ public class DialogBox extends HBox {
                         + "-fx-background-radius: 10;"
                         + "-fx-padding: 10;"
         );
+
+        return dialogBox;
+    }
+
+    /**
+     * Returns whether the given line represents a help command.
+     *
+     * @param line the line to check
+     * @return true if the line represents a command
+     */
+    private static boolean isHelpCommandLine(String line) {
+        return !line.isBlank()
+                && !line.startsWith("    ")
+                && !line.startsWith("Xuan is ")
+                && !line.equals("Here are the commands you can use:");
+    }
+
+    /**
+     * Creates a dialog box for displaying the help message with rich text.
+     *
+     * @param text the help message
+     * @param image Xuan's image
+     * @return the formatted help dialog box
+     */
+    public static DialogBox getXuanHelpDialog(
+            String text, ImageView image) {
+        DialogBox dialogBox = new DialogBox("", image);
+
+        TextFlow helpText = new TextFlow();
+        helpText.setPrefWidth(300.0);
+        helpText.setMaxWidth(300.0);
+        helpText.setStyle(
+                "-fx-background-color: #e8e8e8;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-padding: 10;"
+        );
+
+        String[] lines = text.split("\n", -1);
+
+        for (int i = 0; i < lines.length; i++) {
+            String line = lines[i];
+            String suffix = i < lines.length - 1 ? "\n" : "";
+
+            Text textNode = new Text(line + suffix);
+
+            double fontSize = textNode.getFont().getSize();
+
+            if (isHelpCommandLine(line)) {
+                textNode.setFont(Font.font(
+                        textNode.getFont().getFamily(),
+                        FontWeight.BOLD,
+                        fontSize));
+            } else if (line.startsWith("    ")) {
+                textNode.setFont(Font.font(
+                        "Serif",
+                        FontPosture.ITALIC,
+                        fontSize + 1));
+            }
+
+            helpText.getChildren().add(textNode);
+        }
+
+        dialogBox.getChildren().clear();
+        dialogBox.getChildren().addAll(
+                dialogBox.displayPicture,
+                helpText
+        );
+
+        dialogBox.setAlignment(Pos.TOP_LEFT);
 
         return dialogBox;
     }
