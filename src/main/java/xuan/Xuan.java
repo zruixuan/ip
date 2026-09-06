@@ -45,6 +45,184 @@ public class Xuan {
     }
 
     /**
+     * Finds tasks whose descriptions contain the specified keyword.
+     *
+     * @param input the full find command entered by the user
+     * @return the message containing the matching tasks
+     * @throws XuanException if the search keyword is missing
+     */
+    private String handleFind(String input) throws XuanException {
+        String keyword = parser.getFindKeyword(input);
+        ArrayList<Task> matchingTasks = taskList.findTasks(keyword);
+
+        return ui.getMatchingTasksMessage(matchingTasks);
+    }
+
+    /**
+     * Finds deadlines that occur on the specified date.
+     *
+     * @param input the full finddate command entered by the user
+     * @return the message containing deadlines on the specified date
+     * @throws XuanException if the date is missing or invalid
+     */
+    private String handleFindDate(String input) throws XuanException {
+        LocalDate targetDate = parser.getFindDate(input);
+        ArrayList<Deadline> deadlines =
+                taskList.findDeadlinesOnDate(targetDate);
+
+        return ui.getDeadlinesOnDateMessage(targetDate, deadlines);
+    }
+
+    /**
+     * Marks the specified task as done and saves the updated task list.
+     *
+     * @param input the full mark command entered by the user
+     * @return the message describing the marked task
+     * @throws XuanException if the task number is missing or invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleMark(String input) throws XuanException, IOException {
+        if (!input.startsWith("mark ")
+                || input.substring(5).trim().isEmpty()) {
+            throw new XuanException(
+                    "Please specify the task number to mark.");
+        }
+
+        int taskNumber = parser.getTaskNumber(input, 5);
+
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
+            throw new XuanException(
+                    "That task number does not exist.");
+        }
+
+        Task task = taskList.get(taskNumber - 1);
+        task.markAsDone();
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getMarkedTaskMessage(task);
+    }
+
+    /**
+     * Marks the specified task as not done and saves the updated task list.
+     *
+     * @param input the full unmark command entered by the user
+     * @return the message describing the unmarked task
+     * @throws XuanException if the task number is missing or invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleUnmark(String input)
+            throws XuanException, IOException {
+        if (!input.startsWith("unmark ")
+                || input.substring(7).trim().isEmpty()) {
+            throw new XuanException(
+                    "Please specify the task number to unmark.");
+        }
+
+        int taskNumber = parser.getTaskNumber(input, 7);
+
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
+            throw new XuanException(
+                    "That task number does not exist.");
+        }
+
+        Task task = taskList.get(taskNumber - 1);
+        task.markAsNotDone();
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getUnmarkedTaskMessage(task);
+    }
+
+    /**
+     * Deletes the specified task and saves the updated task list.
+     *
+     * @param input the full delete command entered by the user
+     * @return the message describing the deleted task
+     * @throws XuanException if the task number is missing or invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleDelete(String input)
+            throws XuanException, IOException {
+        if (!input.startsWith("delete ")
+                || input.substring(7).trim().isEmpty()) {
+            throw new XuanException(
+                    "Please specify the task number to delete.");
+        }
+
+        int taskNumber = parser.getTaskNumber(input, 7);
+
+        if (taskNumber < 1 || taskNumber > taskList.size()) {
+            throw new XuanException(
+                    "That task number does not exist.");
+        }
+
+        Task deletedTask = taskList.delete(taskNumber - 1);
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getDeletedTaskMessage(
+                deletedTask, taskList.size());
+    }
+
+    /**
+     * Adds a todo task and saves the updated task list.
+     *
+     * @param input the full todo command entered by the user
+     * @return the message describing the added task
+     * @throws XuanException if the task description is invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleTodo(String input)
+            throws XuanException, IOException {
+        String description = parser.getDescription(input, 4);
+
+        Task task = new Todo(description);
+        taskList.add(task);
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getAddedTaskMessage(task, taskList.size());
+    }
+
+    /**
+     * Adds a deadline task and saves the updated task list.
+     *
+     * @param input the full deadline command entered by the user
+     * @return the message describing the added task
+     * @throws XuanException if the deadline command is invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleDeadline(String input)
+            throws XuanException, IOException {
+        String description = parser.getDeadlineDescription(input);
+        LocalDate by = parser.getDeadlineDate(input);
+
+        Task task = new Deadline(description, by);
+        taskList.add(task);
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getAddedTaskMessage(task, taskList.size());
+    }
+
+    /**
+     * Adds an event task and saves the updated task list.
+     *
+     * @param input the full event command entered by the user
+     * @return the message describing the added task
+     * @throws XuanException if the event command is invalid
+     * @throws IOException if the updated task list cannot be saved
+     */
+    private String handleEvent(String input)
+            throws XuanException, IOException {
+        String description = parser.getEventDescription(input);
+        String from = parser.getEventFrom(input);
+        String to = parser.getEventTo(input);
+
+        Task task = new Event(description, from, to);
+        taskList.add(task);
+        storage.saveTasks(taskList.getTasks());
+
+        return ui.getAddedTaskMessage(task, taskList.size());
+    }
+
+    /**
      * Starts the command-line version of the Xuan chatbot.
      *
      * @param args command-line arguments
@@ -98,102 +276,21 @@ public class Xuan {
             } else if (command.equals("list")) {
                 return ui.getTaskListMessage(taskList);
             } else if (command.equals("find")) {
-                String keyword = parser.getFindKeyword(input);
-                ArrayList<Task> matchingTasks = taskList.findTasks(keyword);
-
-                return ui.getMatchingTasksMessage(matchingTasks);
+                return handleFind(input);
             } else if (command.equals("finddate")) {
-                LocalDate targetDate = parser.getFindDate(input);
-                ArrayList<Deadline> deadlines =
-                        taskList.findDeadlinesOnDate(targetDate);
-
-                return ui.getDeadlinesOnDateMessage(targetDate, deadlines);
+                return handleFindDate(input);
             } else if (command.equals("mark")) {
-                if (!input.startsWith("mark ")
-                        || input.substring(5).trim().isEmpty()) {
-                    throw new XuanException(
-                            "Please specify the task number to mark.");
-                }
-
-                int taskNumber = parser.getTaskNumber(input, 5);
-
-                if (taskNumber < 1 || taskNumber > taskList.size()) {
-                    throw new XuanException(
-                            "That task number does not exist.");
-                }
-
-                Task task = taskList.get(taskNumber - 1);
-                task.markAsDone();
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getMarkedTaskMessage(task);
+                return handleMark(input);
             } else if (command.equals("unmark")) {
-                if (!input.startsWith("unmark ")
-                        || input.substring(7).trim().isEmpty()) {
-                    throw new XuanException(
-                            "Please specify the task number to unmark.");
-                }
-
-                int taskNumber = parser.getTaskNumber(input, 7);
-
-                if (taskNumber < 1 || taskNumber > taskList.size()) {
-                    throw new XuanException(
-                            "That task number does not exist.");
-                }
-
-                Task task = taskList.get(taskNumber - 1);
-                task.markAsNotDone();
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getUnmarkedTaskMessage(task);
+                return handleUnmark(input);
             } else if (command.equals("delete")) {
-                if (!input.startsWith("delete ")
-                        || input.substring(7).trim().isEmpty()) {
-                    throw new XuanException(
-                            "Please specify the task number to delete.");
-                }
-
-                int taskNumber = parser.getTaskNumber(input, 7);
-
-                if (taskNumber < 1 || taskNumber > taskList.size()) {
-                    throw new XuanException(
-                            "That task number does not exist.");
-                }
-
-                Task deletedTask = taskList.delete(taskNumber - 1);
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getDeletedTaskMessage(
-                        deletedTask, taskList.size());
+                return handleDelete(input);
             } else if (command.equals("todo")) {
-                String description = parser.getDescription(input, 4);
-
-                Task task = new Todo(description);
-                taskList.add(task);
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getAddedTaskMessage(task, taskList.size());
+                return handleTodo(input);
             } else if (command.equals("deadline")) {
-                String description =
-                        parser.getDeadlineDescription(input);
-                LocalDate by = parser.getDeadlineDate(input);
-
-                Task task = new Deadline(description, by);
-                taskList.add(task);
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getAddedTaskMessage(task, taskList.size());
+                return handleDeadline(input);
             } else if (command.equals("event")) {
-                String description =
-                        parser.getEventDescription(input);
-                String from = parser.getEventFrom(input);
-                String to = parser.getEventTo(input);
-
-                Task task = new Event(description, from, to);
-                taskList.add(task);
-                storage.saveTasks(taskList.getTasks());
-
-                return ui.getAddedTaskMessage(task, taskList.size());
+                return handleEvent(input);
             } else {
                 throw new XuanException(
                         "Sorry, I don't understand that command.");
