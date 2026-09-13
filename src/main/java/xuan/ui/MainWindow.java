@@ -81,8 +81,8 @@ public class MainWindow extends AnchorPane {
 
         String response = xuan.getResponse(input);
 
-        boolean isError = response.startsWith("Xuan: ")
-                && !input.trim().equals("bye");
+        boolean isError = response.startsWith("Mission alert - ")
+                || response.startsWith("Xuan: Mission alert - ");
 
         DialogBox userDialog = DialogBox.getUserDialog(
                 input, new ImageView(userImage));

@@ -51,8 +51,8 @@ public class Ui {
      * @return the greeting message
      */
     public String getGreetingMessage() {
-        return "Hello! I'm Xuan.\n"
-                + "What can I do for you?";
+        return "Hey! I'm Xuan, your mission control.\n"
+                + "What are we taking on today?";
     }
 
     /**
@@ -60,8 +60,8 @@ public class Ui {
      */
     public void showGreeting() {
         showMessage(
-                "Xuan: Hello! I'm Xuan.",
-                "What can I do for you?"
+                "Hey! I'm Xuan, your mission control.",
+                "What are we taking on today?"
         );
         System.out.println();
     }
@@ -72,7 +72,7 @@ public class Ui {
      * @return the goodbye message
      */
     public String getByeMessage() {
-        return "Xuan: Bye. Hope to see you again soon!";
+        return "Mission complete for today. See you next time!";
     }
 
     /**
@@ -108,7 +108,7 @@ public class Ui {
      */
     public String getTaskListMessage(TaskList taskList) {
         StringBuilder message = new StringBuilder(
-                "Here are your tasks:");
+                "Here's your mission board:");
 
         for (int i = 0; i < taskList.size(); i++) {
             message.append("\n      ")
@@ -136,7 +136,7 @@ public class Ui {
      * @return the formatted error message
      */
     public String getErrorMessage(String message) {
-        return "Xuan: " + message;
+        return "Mission alert - " + message;
     }
 
     /**
@@ -156,10 +156,10 @@ public class Ui {
      * @return the formatted message about the added task
      */
     public String getAddedTaskMessage(Task task, int taskCount) {
-        return "Got it. I've added this task:\n"
+        return "Mission accepted! I've added this task:\n"
                 + "      " + task + "\n"
-                + "      Now you have " + taskCount
-                + " tasks in the list.";
+                + "      You now have " + taskCount
+                + " missions on the board.";
     }
 
     /**
@@ -180,10 +180,10 @@ public class Ui {
      * @return the formatted message about the deleted task
      */
     public String getDeletedTaskMessage(Task task, int taskCount) {
-        return "Noted. I've removed this task:\n"
+        return "Mission dropped. I've removed this task:\n"
                 + "      " + task + "\n"
-                + "      Now you have " + taskCount
-                + " tasks in the list.";
+                + "      You now have " + taskCount
+                + " missions on the board.";
     }
 
     /**
@@ -203,7 +203,7 @@ public class Ui {
      * @return the formatted message about the marked task
      */
     public String getMarkedTaskMessage(Task task) {
-        return "Nice! I've marked this task as done:\n"
+        return "Mission cleared! Nice work:\n"
                 + "      " + task;
     }
 
@@ -223,7 +223,8 @@ public class Ui {
      * @return the formatted message about the unmarked task
      */
     public String getUnmarkedTaskMessage(Task task) {
-        return "OK, I've marked this task as not done yet:\n"
+        return "Back on the mission board! I've marked this task "
+                + "as not done yet:\n"
                 + "      " + task;
     }
 
@@ -246,11 +247,10 @@ public class Ui {
     public String getDeadlinesOnDateMessage(
             LocalDate targetDate, ArrayList<Deadline> deadlines) {
         StringBuilder message = new StringBuilder(
-                "Here are the deadlines on "
-                        + targetDate + ":");
+                "Deadline scan for " + targetDate + ":");
 
         if (deadlines.isEmpty()) {
-            message.append("\n      No deadlines found.");
+            message.append("\n      All clear! No deadlines found.");
         } else {
             for (int i = 0; i < deadlines.size(); i++) {
                 message.append("\n      ")
@@ -283,7 +283,7 @@ public class Ui {
      */
     public String getMatchingTasksMessage(ArrayList<Task> tasks) {
         StringBuilder message = new StringBuilder(
-                "Here are the matching tasks in your list:");
+                "I've tracked down these matching missions:");
 
         for (int i = 0; i < tasks.size(); i++) {
             message.append("\n      ")
@@ -311,8 +311,8 @@ public class Ui {
      */
     public String getHelpMessage() {
         return String.join("\n",
-                "Xuan is a task manager that helps you manage todos, "
-                        + "deadlines, and events.",
+                "Xuan is your mission-control task buddy for managing "
+                        + "todos, deadlines, and events.",
                 "",
                 "Here are the commands you can use:",
                 "",
@@ -320,7 +320,7 @@ public class Ui {
                 "    Shows this help message.",
                 "",
                 "list",
-                "    Shows all tasks in your task list.",
+                "    Shows all tasks on your mission board.",
                 "",
                 "todo <description>",
                 "    Adds a todo task.",
@@ -337,27 +337,28 @@ public class Ui {
                 "    Example: event meeting /from 2pm /to 4pm",
                 "",
                 "mark <task number>",
-                "    Marks a task as done.",
+                "    Marks a mission as cleared.",
                 "    Example: mark 2",
                 "",
                 "unmark <task number>",
-                "    Marks a task as not done.",
+                "    Puts a cleared mission back on the board.",
                 "    Example: unmark 2",
                 "",
                 "delete <task number>",
-                "    Deletes a task from the task list.",
+                "    Removes a mission from the board.",
                 "    Example: delete 2",
                 "",
                 "find <keyword>",
-                "    Finds tasks whose descriptions contain the keyword.",
+                "    Tracks down tasks whose descriptions contain "
+                        + "the keyword.",
                 "    Example: find book",
                 "",
                 "finddate yyyy-MM-dd",
-                "    Finds deadlines that occur on the specified date.",
+                "    Scans for deadlines on the specified date.",
                 "    The date must use the format yyyy-MM-dd.",
                 "    Example: finddate 2026-09-10",
                 "",
                 "bye",
-                "    Exits Xuan.");
+                "    Ends today's mission with Xuan.");
     }
 }
