@@ -78,4 +78,109 @@ public class TaskListTest {
         assertEquals(firstDeadline, result.get(0));
         assertEquals(secondDeadline, result.get(1));
     }
+
+    @Test
+    public void findTasks_matchingKeyword_returnsMatchingTask() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        Todo matchingTask = new Todo("read book");
+        tasks.add(matchingTask);
+        tasks.add(new Todo("finish homework"));
+
+        TaskList taskList = new TaskList(tasks);
+
+        ArrayList<Task> result = taskList.findTasks("book");
+
+        assertEquals(1, result.size());
+        assertEquals(matchingTask, result.get(0));
+    }
+
+    @Test
+    public void findTasks_noMatchingKeyword_returnsEmptyList() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Todo("read book"));
+        tasks.add(new Todo("finish homework"));
+
+        TaskList taskList = new TaskList(tasks);
+
+        ArrayList<Task> result = taskList.findTasks("meeting");
+
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void findTasks_multipleMatchingTasks_returnsAllMatchingTasks() {
+        ArrayList<Task> tasks = new ArrayList<>();
+
+        Todo firstTask = new Todo("read book");
+        Deadline secondTask = new Deadline(
+                "return book",
+                LocalDate.parse("2026-09-20"));
+
+        tasks.add(firstTask);
+        tasks.add(new Todo("finish homework"));
+        tasks.add(secondTask);
+
+        TaskList taskList = new TaskList(tasks);
+
+        ArrayList<Task> result = taskList.findTasks("book");
+
+        assertEquals(2, result.size());
+        assertEquals(firstTask, result.get(0));
+        assertEquals(secondTask, result.get(1));
+    }
+
+
+    @Test
+    public void size_multipleTasks_returnsCorrectSize() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        tasks.add(new Todo("read book"));
+        tasks.add(new Todo("finish homework"));
+
+        TaskList taskList = new TaskList(tasks);
+
+        assertEquals(2, taskList.size());
+    }
+
+    @Test
+    public void get_validIndex_returnsCorrectTask() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        Todo firstTask = new Todo("read book");
+        Todo secondTask = new Todo("finish homework");
+
+        tasks.add(firstTask);
+        tasks.add(secondTask);
+
+        TaskList taskList = new TaskList(tasks);
+
+        assertEquals(secondTask, taskList.get(1));
+    }
+
+    @Test
+    public void add_task_increasesSizeAndStoresTask() {
+        TaskList taskList = new TaskList(new ArrayList<>());
+        Todo task = new Todo("read book");
+
+        taskList.add(task);
+
+        assertEquals(1, taskList.size());
+        assertEquals(task, taskList.get(0));
+    }
+
+    @Test
+    public void delete_validIndex_removesAndReturnsTask() {
+        ArrayList<Task> tasks = new ArrayList<>();
+        Todo firstTask = new Todo("read book");
+        Todo secondTask = new Todo("finish homework");
+
+        tasks.add(firstTask);
+        tasks.add(secondTask);
+
+        TaskList taskList = new TaskList(tasks);
+
+        Task deletedTask = taskList.delete(0);
+
+        assertEquals(firstTask, deletedTask);
+        assertEquals(1, taskList.size());
+        assertEquals(secondTask, taskList.get(0));
+    }
 }
