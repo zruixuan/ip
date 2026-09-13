@@ -14,9 +14,9 @@
          xmlns:fx="http://javafx.com/fxml/1">
 
     <padding>
-        <Insets top="10.0"
+        <Insets top="7.0"
                 right="12.0"
-                bottom="10.0"
+                bottom="7.0"
                 left="12.0" />
     </padding>
 
@@ -30,8 +30,8 @@
                       -fx-padding: 10;" />
 
         <ImageView fx:id="displayPicture"
-                   fitHeight="50.0"
-                   fitWidth="50.0"
+                   fitHeight="42.0"
+                   fitWidth="42.0"
                    pickOnBounds="true"
                    preserveRatio="true" />
     </children>

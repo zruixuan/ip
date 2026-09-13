@@ -81,6 +81,9 @@ public class MainWindow extends AnchorPane {
 
         String response = xuan.getResponse(input);
 
+        boolean isError = response.startsWith("Xuan: ")
+                && !input.trim().equals("bye");
+
         DialogBox userDialog = DialogBox.getUserDialog(
                 input, new ImageView(userImage));
 
@@ -88,6 +91,9 @@ public class MainWindow extends AnchorPane {
 
         if (input.trim().equals("help")) {
             xuanDialog = DialogBox.getXuanHelpDialog(
+                    response, new ImageView(xuanImage));
+        } else if (isError) {
+            xuanDialog = DialogBox.getXuanErrorDialog(
                     response, new ImageView(xuanImage));
         } else {
             xuanDialog = DialogBox.getXuanDialog(

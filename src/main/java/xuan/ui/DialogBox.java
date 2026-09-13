@@ -59,7 +59,16 @@ public class DialogBox extends HBox {
      * @return the user dialog box
      */
     public static DialogBox getUserDialog(String text, ImageView image) {
-        return new DialogBox(text, image);
+        DialogBox dialogBox = new DialogBox(text, image);
+
+        dialogBox.dialog.setStyle(
+                "-fx-background-color: #4A90E2;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-padding: 10;"
+        );
+
+        return dialogBox;
     }
 
     /**
@@ -81,6 +90,27 @@ public class DialogBox extends HBox {
         dialogBox.setAlignment(Pos.TOP_LEFT);
         dialogBox.dialog.setStyle(
                 "-fx-background-color: #e8e8e8;"
+                        + "-fx-background-radius: 10;"
+                        + "-fx-padding: 10;"
+        );
+
+        return dialogBox;
+    }
+
+    /**
+     * Creates a dialog box for displaying an error message.
+     *
+     * @param text the error message
+     * @param image Xuan's image
+     * @return the error dialog box
+     */
+    public static DialogBox getXuanErrorDialog(String text, ImageView image) {
+        DialogBox dialogBox = getXuanDialog(text, image);
+
+        dialogBox.dialog.setStyle(
+                "-fx-background-color: #ffe5e5;"
+                        + "-fx-text-fill: #b00020;"
+                        + "-fx-font-weight: bold;"
                         + "-fx-background-radius: 10;"
                         + "-fx-padding: 10;"
         );
