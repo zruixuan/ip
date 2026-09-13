@@ -288,10 +288,12 @@ public class Xuan {
         try {
             String command = parser.getCommandWord(input);
             if (command.equals("bye")) {
+                parser.validateNoArguments(input, "bye");
                 return ui.getByeMessage();
             } else if (command.equals("help")) {
                 return handleHelp(input);
             } else if (command.equals("list")) {
+                parser.validateNoArguments(input, "list");
                 return ui.getTaskListMessage(taskList);
             } else if (command.equals("find")) {
                 return handleFind(input);

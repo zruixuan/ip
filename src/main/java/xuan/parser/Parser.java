@@ -32,6 +32,40 @@ public class Parser {
     }
 
     /**
+     * Checks that a command does not contain any arguments.
+     *
+     * @param input the full command entered by the user
+     * @param command the command word
+     * @throws XuanException if the command contains extra arguments
+     */
+    public void validateNoArguments(String input, String command)
+            throws XuanException {
+        if (!input.trim().equals(command)) {
+            throw new XuanException(
+                    "The " + command + " command does not take any arguments.");
+        }
+    }
+
+    /**
+     * Counts how many times a parameter appears in the input.
+     *
+     * @param input the full command entered by the user
+     * @param parameter the parameter to count
+     * @return the number of occurrences of the parameter
+     */
+    private int countParameter(String input, String parameter) {
+        int count = 0;
+        int index = 0;
+
+        while ((index = input.indexOf(parameter, index)) != -1) {
+            count++;
+            index += parameter.length();
+        }
+
+        return count;
+    }
+
+    /**
      * Gets the task number from the user's input.
      *
      * @param input the full command entered by the user
@@ -81,6 +115,11 @@ public class Parser {
      * @throws XuanException if /by is missing or the description is empty
      */
     public String getDeadlineDescription(String input) throws XuanException {
+        if (countParameter(input, " /by ") > 1) {
+            throw new XuanException(
+                    "The /by parameter should only be specified once.");
+        }
+
         int byIndex = input.indexOf(" /by ");
 
         if (byIndex == -1) {
@@ -105,6 +144,11 @@ public class Parser {
      *         or the date is not in yyyy-MM-dd format
      */
     public LocalDate getDeadlineDate(String input) throws XuanException {
+        if (countParameter(input, " /by ") > 1) {
+            throw new XuanException(
+                    "The /by parameter should only be specified once.");
+        }
+
         int byIndex = input.indexOf(" /by ");
 
         if (byIndex == -1) {
@@ -133,6 +177,12 @@ public class Parser {
      * @throws XuanException if /from or /to is missing, or the description is empty
      */
     public String getEventDescription(String input) throws XuanException {
+        if (countParameter(input, " /from ") > 1
+                || countParameter(input, " /to ") > 1) {
+            throw new XuanException(
+                    "The /from and /to parameters should only be specified once.");
+        }
+
         int fromIndex = input.indexOf(" /from ");
         int toIndex = input.indexOf(" /to ");
 
@@ -158,6 +208,12 @@ public class Parser {
      * @throws XuanException if /from or /to is missing, or the start time is empty
      */
     public String getEventFrom(String input) throws XuanException {
+        if (countParameter(input, " /from ") > 1
+                || countParameter(input, " /to ") > 1) {
+            throw new XuanException(
+                    "The /from and /to parameters should only be specified once.");
+        }
+
         int fromIndex = input.indexOf(" /from ");
         int toIndex = input.indexOf(" /to ");
 
@@ -183,6 +239,12 @@ public class Parser {
      * @throws XuanException if /to is missing or the end time is empty
      */
     public String getEventTo(String input) throws XuanException {
+        if (countParameter(input, " /from ") > 1
+                || countParameter(input, " /to ") > 1) {
+            throw new XuanException(
+                    "The /from and /to parameters should only be specified once.");
+        }
+
         int toIndex = input.indexOf(" /to ");
 
         if (toIndex == -1) {
