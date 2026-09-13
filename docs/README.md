@@ -2,6 +2,8 @@
 
 Xuan is a task management chatbot that helps users manage todos, deadlines, and events through simple text commands.
 
+![Xuan GUI](Ui.png)
+
 Xuan acts as a friendly mission-control task buddy. You can add tasks, mark tasks as completed, search for tasks, and view deadlines on a specific date.
 
 ## Viewing help
